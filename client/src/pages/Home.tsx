@@ -1,380 +1,214 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, CheckCircle, Shield, Zap, BarChart3, Lock, TrendingUp, TrendingDown, Globe } from "lucide-react";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import { translations, Language } from "../i18n";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-export default function Home() {
-  const [lang, setLang] = useState<Language>("zh");
-  const t = translations[lang];
+import React, { useState, useEffect } from 'react';
+import translations from './i18n';
 
-  const [formData, setFormData] = useState({
-    email: "",
-    atasId: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+// 假設語言環境為繁體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
+const currentLang = 'zh-TW'; // 可以是 'zh-TW', 'zh-CN', 'en'
+const t = translations[currentLang];
 
-  // Initialize language from browser preference
+const Home: React.FC = () => {
+  const [showAgeGate, setShowAgeGate] = useState(true);
+
   useEffect(() => {
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.startsWith("en")) {
-      setLang("en");
-    } else if (browserLang.includes("cn") || browserLang.includes("hans")) {
-      setLang("sc");
-    } else {
-      setLang("zh");
+    const ageVerified = localStorage.getItem('ageVerified');
+    if (ageVerified === 'true') {
+      setShowAgeGate(false);
     }
   }, []);
 
-  const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleEnterSite = () => {
+    localStorage.setItem('ageVerified', 'true');
+    setShowAgeGate(false);
   };
 
-  const openMailto = (customMessage?: string) => {
-    const subject = encodeURIComponent("申請 EasyLot HUD 7天試用");
-    const body = encodeURIComponent("我的 Machine ID：");
-    window.open(`mailto:gotoyo0001@gmail.com?subject=${subject}&body=${body}`, "_blank");
+  const handleLeaveSite = () => {
+    // 可以導向其他頁面或關閉視窗
+    window.close(); // 嘗試關閉當前視窗
+    alert('您已選擇離開網站。');
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.email || !formData.atasId) {
-      toast.error(t.toastError);
-      return;
-    }
-    setIsSubmitting(true);
-    
-    const customBody = `${t.emailBodyBase}\n\n${lang === 'en' ? 'Email' : '電子信箱'}：${formData.email}\n${lang === 'en' ? 'ATAS ID' : 'ATAS 帳號'}：${formData.atasId}\n\n${formData.message ? `${lang === 'en' ? 'Message' : '留言'}：${formData.message}\n\n` : ""}${lang === 'en' ? 'Looking forward to your reply, thank you!' : '期待您的回覆，謝謝！'}`;
-    
-    openMailto(customBody);
-    toast.success(t.toastSuccess);
-    setFormData({ email: "", atasId: "", message: "" });
-    setIsSubmitting(false);
-  };
-
-  const LanguageSwitcher = () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
-          <Globe className="w-4 h-4" />
-          <span className="text-xs uppercase">{lang}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-card border-border">
-        <DropdownMenuItem onClick={() => setLang("zh")} className="cursor-pointer">繁體中文</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLang("sc")} className="cursor-pointer">简体中文</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLang("en")} className="cursor-pointer">English</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Header / Navigation */}
-      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-emerald-500"
+  if (showAgeGate) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-center max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-white mb-4">{t.ageGate.title}</h2>
+          <p className="text-gray-300 mb-6">{t.ageGate.description}</p>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={handleEnterSite}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
-              <path d="M11 2L3 14h8l-1 8 9-12h-8l1-8z" />
-            </svg>
-            <span className="text-xl font-bold font-poppins">EasyLot HUD</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t.navFeatures}
-            </a>
-            <a href="#security" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t.navSecurity}
-            </a>
-            <a href="#trial" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t.navTrial}
-            </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t.downloadSoftware}
-            </a>
-          </nav>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <button className="btn-primary text-sm hidden sm:block" onClick={() => openMailto()}>
-              {t.applyTrial}
+              {t.ageGate.confirm}
+            </button>
+            <button
+              onClick={handleLeaveSite}
+              className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+            >
+              {t.ageGate.leave}
             </button>
           </div>
         </div>
-      </header>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white font-sans">
+      {/* Navbar */}
+      <nav className="bg-gray-800 p-4 shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center">
+            {/* 科技感閃電 Logo */}
+            <svg
+              className="w-8 h-8 text-emerald-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M11.484 2.367c.07-.097.163-.177.268-.236.106-.06.22-.09.337-.09.117 0 .231.03.337.09.105.059.198.139.268.236l7.126 9.833a1.5 1.5 0 0 1-.268 2.263c-.106.06-.22.09-.337.09H13.5v5.5a.75.75 0 0 1-1.5 0v-5.5H6.94a1.5 1.5 0 0 1-.337-.09 1.5 1.5 0 0 1-.268-2.263l7.126-9.833Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="text-2xl font-bold">EasyLot HUD 1.0</span>
+          </div>
+          <ul className="flex space-x-6">
+            <li><a href="#home" className="hover:text-emerald-500 transition duration-300">{t.navbar.home}</a></li>
+            <li><a href="#features" className="hover:text-emerald-500 transition duration-300">{t.navbar.features}</a></li>
+            <li><a href="#pricing" className="hover:text-emerald-500 transition duration-300">{t.navbar.pricing}</a></li>
+            <li><a href="#contact" className="hover:text-emerald-500 transition duration-300">{t.navbar.contact}</a></li>
+          </ul>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-rose-500/5 pointer-events-none" />
-        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
-          backgroundImage: `linear-gradient(0deg, transparent 24%, rgba(16, 185, 129, 0.1) 25%, rgba(16, 185, 129, 0.1) 26%, transparent 27%, transparent 74%, rgba(16, 185, 129, 0.1) 75%, rgba(16, 185, 129, 0.1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(16, 185, 129, 0.1) 25%, rgba(16, 185, 129, 0.1) 26%, transparent 27%, transparent 74%, rgba(16, 185, 129, 0.1) 75%, rgba(16, 185, 129, 0.1) 76%, transparent 77%, transparent)`,
-          backgroundSize: '50px 50px'
-        }} />
+      <section id="home" className="relative h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
+        <div className="absolute inset-0 bg-black opacity-60"></div>
+        <div className="relative z-10 text-center">
+          <h1 className="text-5xl font-extrabold mb-4">EasyLot HUD 1.0</h1>
+          <p className="text-xl text-gray-300 mb-8">您的專業金融交易輔助工具</p>
+          <a
+            href="/EasyLot_HUD_v1.zip"
+            download
+            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+          >
+            {t.home.downloadButton}
+          </a>
+        </div>
+      </section>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 w-fit">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-mono text-emerald-400">{t.liveTradingHud}</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl font-bold font-poppins leading-tight">
-                  {t.title}
-                  <br />
-                  <span className="text-gradient">{t.subtitle}</span>
-                </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  {t.heroDescription}
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <a href="mailto:gotoyo0001@gmail.com?subject=%E7%94%B3%E8%AB%8B%20EasyLot%20HUD%207%E5%A4%A9%E8%A9%A6%E7%94%A8&body=%E6%88%91%E7%9A%84%20Machine%20ID%EF%BC%9A" className="btn-primary flex items-center justify-center gap-2">
-                  {t.applyTrial}
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-                <button className="btn-secondary flex items-center justify-center gap-2">
-                  {t.learnMore}
-                </button>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 pt-8 border-t border-border/50">
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground font-mono uppercase">TRIAL</div>
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
-                    <span className="text-sm font-semibold">{t.trial7Days}</span>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground font-mono uppercase">AUTH</div>
-                  <div className="flex items-center gap-1">
-                    <Shield className="w-4 h-4 text-emerald-500" />
-                    <span className="text-sm font-semibold">{t.rsaOffline}</span>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground font-mono uppercase">LATENCY</div>
-                  <div className="flex items-center gap-1">
-                    <Zap className="w-4 h-4 text-emerald-500" />
-                    <span className="text-sm font-semibold">{t.zeroLatency}</span>
-                  </div>
-                </div>
-              </div>
+      {/* Features Section (Placeholder) */}
+      <section id="features" className="py-20 bg-gray-900">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-12">主要功能</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-bold text-emerald-500 mb-4">即時數據</h3>
+              <p className="text-gray-300">提供市場即時數據分析，助您快速決策。</p>
             </div>
-
-            <div className="relative">
-              <div className="card-glass glow-emerald border-emerald-500/30">
-                <img
-                  src="/hero-demo.png"
-                  alt="EasyLot HUD Demo"
-                  className="w-full h-auto rounded-lg"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 border-2 border-emerald-500/30 rounded-full" />
-              <div className="absolute -bottom-4 -left-4 w-8 h-8 border-2 border-rose-500/30 rounded-full" />
-              <div className="absolute top-8 -right-8 w-1 h-16 bg-gradient-to-b from-emerald-500/50 to-transparent" />
-              <div className="absolute bottom-8 -left-8 w-1 h-16 bg-gradient-to-t from-rose-500/50 to-transparent" />
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-bold text-emerald-500 mb-4">智能交易</h3>
+              <p className="text-gray-300">自動化交易策略，降低人為失誤。</p>
+            </div>
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-bold text-emerald-500 mb-4">風險管理</h3>
+              <p className="text-gray-300">完善的風險控制機制，保護您的資金。</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 md:py-32 bg-card/30 border-b border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 mb-4">
-              <span className="text-xs font-mono text-emerald-400 uppercase">{t.coreFeatures}</span>
+      {/* Application Process Section */}
+      <section id="pricing" className="py-20 bg-gray-800">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-12">三步驟申請流程</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
+              <div className="text-emerald-500 text-5xl font-bold mb-4">1</div>
+              <h3 className="text-2xl font-bold mb-2">{t.home.step1}</h3>
+              <a
+                href="/EasyLot_HUD_v1.zip"
+                download
+                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded transition duration-300 mt-4"
+              >
+                {t.home.downloadButton}
+              </a>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">{t.coreFeatures}</h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="card-glass group border-l-4 border-l-emerald-500/50 hover:border-l-emerald-500">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-emerald-500/20">
-                    <TrendingUp className="w-6 h-6 text-emerald-400" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold font-poppins mb-2">{t.feature1Title}</h3>
-                  <p className="text-muted-foreground">{t.feature1Desc}</p>
-                </div>
-              </div>
+            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
+              <div className="text-emerald-500 text-5xl font-bold mb-4">2</div>
+              <h3 className="text-2xl font-bold mb-2">{t.home.step2}</h3>
+              <p className="text-gray-300 mt-4">確保您已成功安裝並運行軟體。</p>
             </div>
-            <div className="card-glass group border-l-4 border-l-emerald-500/50 hover:border-l-emerald-500">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-emerald-500/20">
-                    <Zap className="w-6 h-6 text-emerald-400" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold font-poppins mb-2">{t.feature2Title}</h3>
-                  <p className="text-muted-foreground">{t.feature2Desc}</p>
-                </div>
-              </div>
-            </div>
-            <div className="card-glass group border-l-4 border-l-emerald-500/50 hover:border-l-emerald-500">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-emerald-500/20">
-                    <BarChart3 className="w-6 h-6 text-emerald-400" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold font-poppins mb-2">{t.feature3Title}</h3>
-                  <p className="text-muted-foreground">{t.feature3Desc}</p>
-                </div>
-              </div>
-            </div>
-            <div className="card-glass group border-l-4 border-l-rose-500/50 hover:border-l-rose-500">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-rose-500/20">
-                    <Shield className="w-6 h-6 text-rose-400" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold font-poppins mb-2">{t.feature4Title}</h3>
-                  <p className="text-muted-foreground">{t.feature4Desc}</p>
-                </div>
-              </div>
+            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
+              <div className="text-emerald-500 text-5xl font-bold mb-4">3</div>
+              <h3 className="text-2xl font-bold mb-2">{t.home.step3}</h3>
+              <p className="text-gray-300 mt-4">填寫下方的表單，我們將盡快為您處理。</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Demo Section */}
-      <section className="py-20 md:py-32 border-b border-border/50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">{t.demoTitle}</h2>
-          <p className="text-lg text-muted-foreground mb-12">{t.demoDesc}</p>
-          <div className="relative max-w-4xl mx-auto">
-            <div className="card-glass aspect-video border-emerald-500/30">
-              <iframe
-                width="100%" height="100%"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Demo" frameBorder="0" allowFullScreen className="rounded-lg"
+      {/* Contact Form Section */}
+      <section id="contact" className="py-20 bg-gray-900">
+        <div className="container mx-auto text-center max-w-2xl">
+          <h2 className="text-4xl font-bold mb-12">聯絡我們</h2>
+          <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-left text-gray-300 text-sm font-bold mb-2">
+                {t.home.formName}
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
+                placeholder={t.home.formName}
+                required
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Security Section */}
-      <section id="security" className="py-20 md:py-32 bg-card/30 border-b border-border/50">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="card-glass border-l-4 border-l-emerald-500">
-            <div className="flex items-start gap-4">
-              <Lock className="w-8 h-8 text-emerald-400 flex-shrink-0 mt-1" />
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold font-poppins mb-6">{t.securityTitle}</h2>
-                <div className="space-y-6 text-muted-foreground">
-                  <div>
-                    <p className="font-semibold text-foreground mb-1">{t.securityPoint1Title}</p>
-                    <p>{t.securityPoint1Desc}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground mb-1">{t.securityPoint2Title}</p>
-                    <p>{t.securityPoint2Desc}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground mb-1">{t.securityPoint3Title}</p>
-                    <p>{t.securityPoint3Desc}</p>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <label htmlFor="email" className="block text-left text-gray-300 text-sm font-bold mb-2">
+                {t.home.formEmail}
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
+                placeholder={t.home.formEmail}
+                required
+              />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trial Section */}
-      <section id="trial" className="py-20 md:py-32 border-b border-border/50">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <div className="card-glass border-t-2 border-t-emerald-500">
-            <h2 className="text-3xl font-bold font-poppins mb-2">{t.formTitle}</h2>
-            <p className="text-muted-foreground mb-8">{t.formDesc}</p>
-
-            <form onSubmit={handleFormSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">{t.emailLabel} *</label>
-                <Input type="email" name="email" placeholder="your@email.com" value={formData.email} onChange={handleFormChange} required />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">{t.atasIdLabel} *</label>
-                <Input type="text" name="atasId" placeholder="user123" value={formData.atasId} onChange={handleFormChange} required />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">{t.msgLabel}</label>
-                <Textarea name="message" placeholder={t.msgPlaceholder} value={formData.message} onChange={handleFormChange} className="min-h-24" />
-              </div>
-              <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
-                {isSubmitting ? t.submitting : t.submitBtn}
-                {!isSubmitting && <ArrowRight className="w-4 h-4" />}
-              </button>
-              <p className="text-xs text-muted-foreground text-center">{t.privacyNote}</p>
-            </form>
-          </div>
+            <div>
+              <label htmlFor="machine_id" className="block text-left text-gray-300 text-sm font-bold mb-2">
+                {t.home.formMachineId}
+              </label>
+              <input
+                type="text"
+                id="machine_id"
+                name="machine_id"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
+                placeholder={t.home.formMachineId}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+            >
+              {t.home.formSubmit}
+            </button>
+          </form>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-card/50 border-t border-border py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="font-semibold font-poppins mb-4 uppercase text-xs text-emerald-400">{t.aboutTitle}</h3>
-              <p className="text-sm text-muted-foreground">{t.aboutDesc}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold font-poppins mb-4 uppercase text-xs text-emerald-400">{t.linksTitle}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#features" className="hover:text-foreground">{t.navFeatures}</a></li>
-                <li><a href="#security" className="hover:text-foreground">{t.navSecurity}</a></li>
-                <li><a href="#trial" className="hover:text-foreground">{t.navTrial}</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold font-poppins mb-4 uppercase text-xs text-emerald-400">{t.contactTitle}</h3>
-              <p className="text-sm text-muted-foreground">support@easylot.com<br />+886 (02) 1234-5678</p>
-            </div>
-          </div>
-          <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-muted-foreground">
-            <p>{t.copyright}</p>
-            <p className="mt-2 md:mt-0">{t.disclaimer}</p>
-          </div>
-        </div>
+      <footer className="bg-gray-800 p-8 text-center text-gray-400">
+        <p>&copy; 2023 EasyLot HUD. All rights reserved.</p>
       </footer>
     </div>
   );
-}
+};
+
+export default Home;

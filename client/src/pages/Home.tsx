@@ -2,14 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import translations from '../i18n';
 
-// 假設語言環境為繁體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
-const currentLang = 'zh-TW'; // 可以是 'zh-TW', 'zh-CN', 'en'
+// 假設語言環境為簡體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
+const currentLang = 'zh-CN'; // 可以是 'zh-TW', 'zh-CN', 'en'
 const t = translations[currentLang];
 
 const Home: React.FC = () => {
   const [showAgeGate, setShowAgeGate] = useState(true);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const ageVerified = localStorage.getItem('ageVerified');
@@ -30,6 +31,9 @@ const Home: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsSubmitting(true); // 開始提交，設置為提交中
+    setSubmitMessage(''); // 清空之前的訊息
+
     const form = event.currentTarget;
     const formData = new FormData(form);
 
@@ -53,9 +57,13 @@ const Home: React.FC = () => {
         } else {
           setSubmitMessage('表單提交失敗，請稍後再試。');
         }
+        setFormSubmitted(false); // 即使失敗，也確保 formSubmitted 為 false 以顯示表單
       }
     } catch (error) {
       setSubmitMessage('網路錯誤，請檢查您的連線。');
+      setFormSubmitted(false); // 即使失敗，也確保 formSubmitted 為 false 以顯示表單
+    } finally {
+      setIsSubmitting(false); // 提交結束
     }
   };
 
@@ -295,9 +303,12 @@ const Home: React.FC = () => {
           <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" onSubmit={handleSubmit} className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
             <div className="relative z-10">
-              {formSubmitted ? (
-                <p className="text-emerald-400 text-2xl font-bold">{submitMessage}</p>
-              ) : (
+              {submitMessage && (
+                <p className={`text-2xl font-bold mb-6 ${formSubmitted ? 'text-emerald-400' : 'text-red-500'}`}>
+                  {submitMessage}
+                </p>
+              )}
+              {!formSubmitted && !isSubmitting && (
                 <>
                   <div>
                     <label htmlFor="name" className="block text-left text-gray-300 text-lg font-bold mb-2">
@@ -341,10 +352,14 @@ const Home: React.FC = () => {
                   <button
                     type="submit"
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-10 rounded-full text-xl transition duration-300 transform hover:scale-105 mt-6"
+                    disabled={isSubmitting}
                   >
-                    {t.home.formSubmit}
+                    {isSubmitting ? '提交中...' : t.home.formSubmit}
                   </button>
                 </>
+              )}
+              {isSubmitting && (
+                <p className="text-emerald-400 text-2xl font-bold">提交中...</p>
               )}
             </div>
           </form>

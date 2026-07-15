@@ -46,17 +46,9 @@ export default function Home() {
   };
 
   const openMailto = (customMessage?: string) => {
-    const subject = encodeURIComponent(t.emailSubject);
-    let bodyText = t.emailBodyBase;
-    
-    if (customMessage) {
-      bodyText = customMessage;
-    } else {
-      bodyText += `\n\n${lang === 'en' ? 'Email' : '電子信箱'}：\n${lang === 'en' ? 'ATAS ID' : 'ATAS 帳號'}：\n\n${lang === 'en' ? 'Looking forward to your reply, thank you!' : '期待您的回覆，謝謝！'}`;
-    }
-    
-    const body = encodeURIComponent(bodyText);
-    window.open(`mailto:support@easylot.com?subject=${subject}&body=${body}`, "_blank");
+    const subject = encodeURIComponent("申請 EasyLot HUD 7天試用");
+    const body = encodeURIComponent("我的 Machine ID：");
+    window.open(`mailto:gotoyo0001@gmail.com?subject=${subject}&body=${body}`, "_blank");
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -109,8 +101,7 @@ export default function Home() {
               strokeLinejoin="round"
               className="text-emerald-500"
             >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              <path d="M12 22l-4-2v-6l4-2 4 2v6l-4 2z" />
+              <path d="M11 2L3 14h8l-1 8 9-12h-8l1-8z" />
             </svg>
             <span className="text-xl font-bold font-poppins">EasyLot HUD</span>
           </div>
@@ -123,6 +114,9 @@ export default function Home() {
             </a>
             <a href="#trial" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t.navTrial}
+            </a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t.downloadSoftware}
             </a>
           </nav>
           <div className="flex items-center gap-4">
@@ -161,10 +155,10 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button className="btn-primary flex items-center justify-center gap-2" onClick={() => openMailto()}>
+                <a href="mailto:gotoyo0001@gmail.com?subject=%E7%94%B3%E8%AB%8B%20EasyLot%20HUD%207%E5%A4%A9%E8%A9%A6%E7%94%A8&body=%E6%88%91%E7%9A%84%20Machine%20ID%EF%BC%9A" className="btn-primary flex items-center justify-center gap-2">
                   {t.applyTrial}
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </a>
                 <button className="btn-secondary flex items-center justify-center gap-2">
                   {t.learnMore}
                 </button>
@@ -198,7 +192,7 @@ export default function Home() {
             <div className="relative">
               <div className="card-glass glow-emerald border-emerald-500/30">
                 <img
-                  src="/easylot-hud-screenshot.png"
+                  src="/hero-demo.png"
                   alt="EasyLot HUD Demo"
                   className="w-full h-auto rounded-lg"
                 />

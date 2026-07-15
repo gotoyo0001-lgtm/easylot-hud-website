@@ -2,11 +2,25 @@
 import React, { useState, useEffect } from 'react';
 import translations from '../i18n';
 
-// 假設語言環境為簡體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
-const currentLang = 'zh-CN'; // 可以是 'zh-TW', 'zh-CN', 'en'
-const t = translations[currentLang];
+type Lang = 'zh-TW' | 'zh-CN' | 'en';
 
 const Home: React.FC = () => {
+  // 語言改成 state：預設繁中，並記憶到 localStorage
+  const [lang, setLang] = useState<Lang>('zh-TW');
+  const t = translations[lang];
+
+  const changeLang = (l: Lang) => {
+    setLang(l);
+    localStorage.setItem('lang', l);
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('lang') as Lang | null;
+    if (saved && (saved === 'zh-TW' || saved === 'zh-CN' || saved === 'en')) {
+      setLang(saved);
+    }
+  }, []);
+
   const [showAgeGate, setShowAgeGate] = useState(true);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -71,6 +85,19 @@ const Home: React.FC = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-center max-w-md mx-auto">
+          <div className="flex justify-center space-x-2 mb-4">
+            {(['zh-TW', 'zh-CN', 'en'] as Lang[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => changeLang(l)}
+                className={`px-3 py-1 rounded text-sm font-bold transition duration-200 ${
+                  lang === l ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                {l === 'zh-TW' ? '繁' : l === 'zh-CN' ? '简' : 'EN'}
+              </button>
+            ))}
+          </div>
           <h2 className="text-2xl font-bold text-white mb-4">{t.ageGate.title}</h2>
           <p className="text-gray-300 mb-6">{t.ageGate.description}</p>
           <div className="flex justify-center space-x-4">
@@ -118,13 +145,29 @@ const Home: React.FC = () => {
             </svg>
             <span className="text-2xl font-bold text-white">EasyLot HUD 1.0</span>
           </div>
-          <ul className="flex space-x-6">
-            <li><a href="#home" className="hover:text-emerald-400 transition duration-300">{t.navbar.home}</a></li>
-            <li><a href="#features" className="hover:text-emerald-400 transition duration-300">{t.navbar.features}</a></li>
-            <li><a href="#tutorial" className="hover:text-emerald-400 transition duration-300">{t.home.videoTutorialTitle}</a></li>
-            <li><a href="#pricing" className="hover:text-emerald-400 transition duration-300">{t.navbar.pricing}</a></li>
-            <li><a href="#contact" className="hover:text-emerald-400 transition duration-300">{t.navbar.contact}</a></li>
-          </ul>
+          <div className="flex items-center space-x-6">
+            <ul className="flex space-x-6">
+              <li><a href="#home" className="hover:text-emerald-400 transition duration-300">{t.navbar.home}</a></li>
+              <li><a href="#features" className="hover:text-emerald-400 transition duration-300">{t.navbar.features}</a></li>
+              <li><a href="#tutorial" className="hover:text-emerald-400 transition duration-300">{t.home.videoTutorialTitle}</a></li>
+              <li><a href="#pricing" className="hover:text-emerald-400 transition duration-300">{t.navbar.pricing}</a></li>
+              <li><a href="#contact" className="hover:text-emerald-400 transition duration-300">{t.navbar.contact}</a></li>
+            </ul>
+            {/* 語言切換 */}
+            <div className="flex space-x-1">
+              {(['zh-TW', 'zh-CN', 'en'] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => changeLang(l)}
+                  className={`px-2 py-1 rounded text-sm font-bold transition duration-200 ${
+                    lang === l ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {l === 'zh-TW' ? '繁' : l === 'zh-CN' ? '简' : 'EN'}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </nav>
 
@@ -300,7 +343,7 @@ const Home: React.FC = () => {
       <section id="contact" className="py-20 relative z-10">
         <div className="container mx-auto text-center max-w-3xl px-4">
           <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">聯絡我們</span></h2>
-          <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" onSubmit={handleSubmit} className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
+          <form action="https://formspree.io/f/xqeraoyg" method="POST" onSubmit={handleSubmit} className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
             <div className="relative z-10">
               {submitMessage && (

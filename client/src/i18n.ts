@@ -83,8 +83,7 @@ const translations = {
       keyOperationsStep1: '可视化以损定仓 (The 2-Click Flow)：点击「开始下单」-> 点击进场位(蓝线) -> 点击止损位(红线)。系统自动依风险金额换算精确手数。',
       keyOperationsStep2: 'RR 止盈智能联动 (Smart RR Tracking)：当您拖动 ATAS 内建止损线时，HUD 绿色建议线会自动根据 RR 比例跳动，指引最佳止盈位置。',
       proTipsTitle: '参数设定小贴士',
-      proTipsStep1: '风险预设 (Risk Presets)：支持在面板自定义 $100 / $200 / $500 / $640 金额，实现一键切换风险配置。
-',
+      proTipsStep1: '风险预设 (Risk Presets)：支持在面板自定义 $100 / $200 / $500 / $640 金额，实现一键切换风险配置。',
     },
     navbar: {
       home: '首页',

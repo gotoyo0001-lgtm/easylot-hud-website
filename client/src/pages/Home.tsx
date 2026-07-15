@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import translations from '../i18n'; // 修正導入路徑
+import translations from '../i18n';
 
 // 假設語言環境為繁體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
 const currentLang = 'zh-TW'; // 可以是 'zh-TW', 'zh-CN', 'en'
@@ -53,9 +53,14 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-sans">
+    <div className="min-h-screen bg-black text-white font-sans relative overflow-hidden">
+      {/* Background Glow Effects */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+
       {/* Navbar */}
-      <nav className="bg-gray-800 p-4 shadow-md">
+      <nav className="bg-gray-900 bg-opacity-80 backdrop-blur-sm p-4 shadow-lg relative z-10">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             {/* 科技感閃電 Logo */}
@@ -71,142 +76,196 @@ const Home: React.FC = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <span className="text-2xl font-bold">EasyLot HUD 1.0</span>
+            <span className="text-2xl font-bold text-white">EasyLot HUD 1.0</span>
           </div>
           <ul className="flex space-x-6">
-            <li><a href="#home" className="hover:text-emerald-500 transition duration-300">{t.navbar.home}</a></li>
-            <li><a href="#features" className="hover:text-emerald-500 transition duration-300">{t.navbar.features}</a></li>
-            <li><a href="#pricing" className="hover:text-emerald-500 transition duration-300">{t.navbar.pricing}</a></li>
-            <li><a href="#contact" className="hover:text-emerald-500 transition duration-300">{t.navbar.contact}</a></li>
+            <li><a href="#home" className="hover:text-emerald-400 transition duration-300">{t.navbar.home}</a></li>
+            <li><a href="#features" className="hover:text-emerald-400 transition duration-300">{t.navbar.features}</a></li>
+            <li><a href="#pricing" className="hover:text-emerald-400 transition duration-300">{t.navbar.pricing}</a></li>
+            <li><a href="#contact" className="hover:text-emerald-400 transition duration-300">{t.navbar.contact}</a></li>
           </ul>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="relative z-10 text-center">
-          <h1 className="text-5xl font-extrabold mb-4">EasyLot HUD 1.0</h1>
-          <p className="text-xl text-gray-300 mb-8">您的專業金融交易輔助工具</p>
+      <section id="home" className="relative h-[70vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
+        <div className="absolute inset-0 bg-black opacity-70"></div>
+        <div className="relative z-10 text-center p-4">
+          <h1 className="text-6xl font-extrabold mb-4 leading-tight"><span className="text-emerald-400">EasyLot HUD 1.0</span></h1>
+          <p className="text-2xl text-gray-300 mb-8">您的專業金融交易輔助工具，洞察市場，精準決策。</p>
           <a
             href="/EasyLot_HUD_v1.zip"
             download
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 transform hover:scale-105"
           >
             {t.home.downloadButton}
           </a>
         </div>
       </section>
 
-      {/* Features Section (Placeholder) */}
-      <section id="features" className="py-20 bg-gray-900">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">主要功能</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-emerald-500 mb-4">即時數據</h3>
-              <p className="text-gray-300">提供市場即時數據分析，助您快速決策。</p>
+      {/* Core Features Section */}
+      <section id="features" className="py-20 relative z-10">
+        <div className="container mx-auto text-center px-4">
+          <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">{t.home.featuresTitle}</span></h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Feature Card A */}
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 mb-6">
+                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4"><span className="text-emerald-400">{t.home.featureA_title}</span></h3>
+                <p className="text-gray-300 text-lg">{t.home.featureA_description}</p>
+              </div>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-emerald-500 mb-4">智能交易</h3>
-              <p className="text-gray-300">自動化交易策略，降低人為失誤。</p>
+
+            {/* Feature Card B */}
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 mb-6">
+                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4"><span className="text-emerald-400">{t.home.featureB_title}</span></h3>
+                <p className="text-gray-300 text-lg">{t.home.featureB_description}</p>
+              </div>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-emerald-500 mb-4">風險管理</h3>
-              <p className="text-gray-300">完善的風險控制機制，保護您的資金。</p>
+
+            {/* Feature Card C */}
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 mb-6">
+                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.279A7.958 7.958 0 0012 4C7.111 4 3.055 7.79 2.321 12.564v0a.75.75 0 00.75.75h18.258a.75.75 0 00.75-.75v0C20.945 7.79 16.889 4 12 4s-4.945 3.79-5.618 8.279z"></path></svg>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4"><span className="text-emerald-400">{t.home.featureC_title}</span></h3>
+                <p className="text-gray-300 text-lg">{t.home.featureC_description}</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Application Process Section */}
-      <section id="pricing" className="py-20 bg-gray-800">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">三步驟申請流程</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
-              <div className="text-emerald-500 text-5xl font-bold mb-4">1</div>
-              <h3 className="text-2xl font-bold mb-2">{t.home.step1}</h3>
-              <a
-                href="/EasyLot_HUD_v1.zip"
-                download
-                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded transition duration-300 mt-4"
-              >
-                {t.home.downloadButton}
-              </a>
+      <section id="pricing" className="py-20 bg-gray-900 relative z-10">
+        <div className="container mx-auto text-center px-4">
+          <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">三步驟申請流程</span></h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 text-6xl font-bold mb-4">1</div>
+                <h3 className="text-3xl font-bold text-white mb-4">{t.home.step1}</h3>
+                <a
+                  href="/EasyLot_HUD_v1.zip"
+                  download
+                  className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300 mt-4 transform hover:scale-105"
+                >
+                  {t.home.downloadButton}
+                </a>
+              </div>
             </div>
-            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
-              <div className="text-emerald-500 text-5xl font-bold mb-4">2</div>
-              <h3 className="text-2xl font-bold mb-2">{t.home.step2}</h3>
-              <p className="text-gray-300 mt-4">確保您已成功安裝並運行軟體。</p>
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 text-6xl font-bold mb-4">2</div>
+                <h3 className="text-3xl font-bold text-white mb-4">{t.home.step2}</h3>
+                <p className="text-gray-300 text-lg mt-4">確保您已成功安裝並運行軟體。</p>
+              </div>
             </div>
-            <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
-              <div className="text-emerald-500 text-5xl font-bold mb-4">3</div>
-              <h3 className="text-2xl font-bold mb-2">{t.home.step3}</h3>
-              <p className="text-gray-300 mt-4">填寫下方的表單，我們將盡快為您處理。</p>
+            <div className="bg-gray-800 bg-opacity-70 p-8 rounded-xl shadow-xl border border-emerald-700 transform hover:scale-105 transition duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+              <div className="relative z-10">
+                <div className="text-emerald-400 text-6xl font-bold mb-4">3</div>
+                <h3 className="text-3xl font-bold text-white mb-4">{t.home.step3}</h3>
+                <p className="text-gray-300 text-lg mt-4">填寫下方的表單，我們將盡快為您處理。</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Form Section */}
-      <section id="contact" className="py-20 bg-gray-900">
-        <div className="container mx-auto text-center max-w-2xl">
-          <h2 className="text-4xl font-bold mb-12">聯絡我們</h2>
-          <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-left text-gray-300 text-sm font-bold mb-2">
-                {t.home.formName}
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
-                placeholder={t.home.formName}
-                required
-              />
+      <section id="contact" className="py-20 relative z-10">
+        <div className="container mx-auto text-center max-w-3xl px-4">
+          <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">聯絡我們</span></h2>
+          <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
+            <div className="relative z-10">
+              <div>
+                <label htmlFor="name" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                  {t.home.formName}
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                  placeholder={t.home.formName}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                  {t.home.formEmail}
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                  placeholder={t.home.formEmail}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="machine_id" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                  {t.home.formMachineId}
+                </label>
+                <input
+                  type="text"
+                  id="machine_id"
+                  name="machine_id"
+                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                  placeholder={t.home.formMachineId}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-10 rounded-full text-xl transition duration-300 transform hover:scale-105 mt-6"
+              >
+                {t.home.formSubmit}
+              </button>
             </div>
-            <div>
-              <label htmlFor="email" className="block text-left text-gray-300 text-sm font-bold mb-2">
-                {t.home.formEmail}
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
-                placeholder={t.home.formEmail}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="machine_id" className="block text-left text-gray-300 text-sm font-bold mb-2">
-                {t.home.formMachineId}
-              </label>
-              <input
-                type="text"
-                id="machine_id"
-                name="machine_id"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white"
-                placeholder={t.home.formMachineId}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
-            >
-              {t.home.formSubmit}
-            </button>
           </form>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 p-8 text-center text-gray-400">
+      <footer className="bg-gray-900 p-8 text-center text-gray-400 relative z-10">
         <p>&copy; 2023 EasyLot HUD. All rights reserved.</p>
       </footer>
+
+      {/* Tailwind CSS for animations (add to your main CSS file or a style block) */}
+      <style jsx>{`
+        @keyframes blob {
+          0% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0, 0) scale(1); }
+        }
+        .animate-blob {
+          animation: blob 7s infinite cubic-bezier(0.6, 0.01, 0.3, 0.9);
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
     </div>
   );
 };

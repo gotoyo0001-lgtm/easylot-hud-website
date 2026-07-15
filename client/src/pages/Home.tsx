@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import translations from './i18n';
+import translations from '../i18n'; // 修正導入路徑
 
 // 假設語言環境為繁體中文，實際應用中應根據用戶瀏覽器或設置動態獲取
 const currentLang = 'zh-TW'; // 可以是 'zh-TW', 'zh-CN', 'en'

@@ -85,18 +85,16 @@ const Home: React.FC = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-center max-w-md mx-auto">
-          <div className="flex justify-center space-x-2 mb-4">
-            {(['zh-TW', 'zh-CN', 'en'] as Lang[]).map((l) => (
-              <button
-                key={l}
-                onClick={() => changeLang(l)}
-                className={`px-3 py-1 rounded text-sm font-bold transition duration-200 ${
-                  lang === l ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                {l === 'zh-TW' ? '繁' : l === 'zh-CN' ? '简' : 'EN'}
-              </button>
-            ))}
+          <div className="flex justify-center mb-4">
+            <select
+              value={lang}
+              onChange={(e) => changeLang(e.target.value as Lang)}
+              className="bg-gray-700 text-gray-200 text-sm font-bold rounded px-3 py-1 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+            >
+              <option value="zh-TW">繁體</option>
+              <option value="zh-CN">简体</option>
+              <option value="en">EN</option>
+            </select>
           </div>
           <h2 className="text-2xl font-bold text-white mb-4">{t.ageGate.title}</h2>
           <p className="text-gray-300 mb-6">{t.ageGate.description}</p>
@@ -130,20 +128,7 @@ const Home: React.FC = () => {
       <nav className="bg-gray-900 bg-opacity-80 backdrop-blur-sm p-4 shadow-lg relative z-10">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            {/* 科技感閃電 Logo */}
-            <svg
-              className="w-8 h-8 text-emerald-500 mr-2"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M11.484 2.367c.07-.097.163-.177.268-.236.106-.06.22-.09.337-.09.117 0 .231.03.337.09.105.059.198.139.268.236l7.126 9.833a1.5 1.5 0 0 1-.268 2.263c-.106.06-.22.09-.337.09H13.5v5.5a.75.75 0 0 1-1.5 0v-5.5H6.94a1.5 1.5 0 0 1-.337-.09 1.5 1.5 0 0 1-.268-2.263l7.126-9.833Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-2xl font-bold text-white">EasyLot HUD 1.0</span>
+            <span className="text-2xl font-bold text-white">EasyLot HUD</span>
           </div>
           <div className="flex items-center space-x-6">
             <ul className="flex space-x-6">
@@ -153,20 +138,16 @@ const Home: React.FC = () => {
               <li><a href="#pricing" className="hover:text-emerald-400 transition duration-300">{t.navbar.pricing}</a></li>
               <li><a href="#contact" className="hover:text-emerald-400 transition duration-300">{t.navbar.contact}</a></li>
             </ul>
-            {/* 語言切換 */}
-            <div className="flex space-x-1">
-              {(['zh-TW', 'zh-CN', 'en'] as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => changeLang(l)}
-                  className={`px-2 py-1 rounded text-sm font-bold transition duration-200 ${
-                    lang === l ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  {l === 'zh-TW' ? '繁' : l === 'zh-CN' ? '简' : 'EN'}
-                </button>
-              ))}
-            </div>
+            {/* 語言切換（下拉） */}
+            <select
+              value={lang}
+              onChange={(e) => changeLang(e.target.value as Lang)}
+              className="bg-gray-700 text-gray-200 text-sm font-bold rounded px-2 py-1 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+            >
+              <option value="zh-TW">繁體</option>
+              <option value="zh-CN">简体</option>
+              <option value="en">EN</option>
+            </select>
           </div>
         </div>
       </nav>
@@ -174,16 +155,34 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section id="home" className="relative h-[80vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
         <div className="absolute inset-0 bg-black opacity-70"></div>
-        <div className="relative z-10 text-center p-4">
-          <h1 className="text-6xl font-extrabold mb-4 leading-tight"><span className="text-emerald-400">EasyLot HUD 1.0</span></h1>
-          <p className="text-2xl text-gray-300 mb-8">您的專業金融交易輔助工具，洞察市場，精準決策。</p>
-          <a
-            href="/EasyLot_HUD_v1.zip"
-            download
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 transform hover:scale-105"
-          >
-            {t.home.downloadButton}
-          </a>
+        <div className="relative z-10 text-center p-4 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-emerald-400">{t.home.heroHeader}</h1>
+          <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">{t.home.heroSubheader}</p>
+          <div className="flex flex-col gap-3 mb-10 max-w-2xl mx-auto text-left">
+            <div className="flex items-start gap-3 bg-gray-900/50 border border-emerald-700 rounded-lg px-5 py-3">
+              <span className="text-emerald-400 text-xl leading-none mt-0.5">✔</span>
+              <span className="text-gray-100 text-base md:text-lg">{t.home.hook1}</span>
+            </div>
+            <div className="flex items-start gap-3 bg-gray-900/50 border border-emerald-700 rounded-lg px-5 py-3">
+              <span className="text-emerald-400 text-xl leading-none mt-0.5">✔</span>
+              <span className="text-gray-100 text-base md:text-lg">{t.home.hook2}</span>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="#contact"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 transform hover:scale-105"
+            >
+              {t.home.trialCta}
+            </a>
+            <a
+              href="/EasyLot_HUD_v1.zip"
+              download
+              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 transform hover:scale-105"
+            >
+              {t.home.downloadButton}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -347,9 +346,13 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
             <div className="relative z-10">
               {submitMessage && (
-                <p className={`text-2xl font-bold mb-6 ${formSubmitted ? 'text-emerald-400' : 'text-red-500'}`}>
-                  {submitMessage}
-                </p>
+                formSubmitted ? (
+                  <div className="text-left text-emerald-200 text-base md:text-lg leading-relaxed whitespace-pre-line mb-6 bg-gray-900/60 border border-emerald-600 rounded-lg p-6">
+                    {submitMessage}
+                  </div>
+                ) : (
+                  <p className="text-red-500 text-xl font-bold mb-6">{submitMessage}</p>
+                )
               )}
               {!formSubmitted && !isSubmitting && (
                 <>
@@ -406,6 +409,12 @@ const Home: React.FC = () => {
               )}
             </div>
           </form>
+
+          {/* 升级 / 正式版备注 */}
+          <div className="mt-8 text-left bg-gray-800/60 border border-emerald-800 rounded-xl p-6 md:p-8">
+            <h3 className="text-emerald-400 font-bold text-lg md:text-xl mb-3">{t.home.upgradeTitle}</h3>
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed whitespace-pre-line">{t.home.upgradeBody}</p>
+          </div>
         </div>
       </section>
 

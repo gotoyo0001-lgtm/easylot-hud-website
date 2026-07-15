@@ -8,6 +8,8 @@ const t = translations[currentLang];
 
 const Home: React.FC = () => {
   const [showAgeGate, setShowAgeGate] = useState(true);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
   useEffect(() => {
     const ageVerified = localStorage.getItem('ageVerified');
@@ -22,9 +24,39 @@ const Home: React.FC = () => {
   };
 
   const handleLeaveSite = () => {
-    // 可以導向其他頁面或關閉視窗
     window.close(); // 嘗試關閉當前視窗
     alert('您已選擇離開網站。');
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setFormSubmitted(true);
+        setSubmitMessage(t.home.formSuccess);
+        form.reset(); // 清空表單
+      } else {
+        const data = await response.json();
+        if (data.errors) {
+          setSubmitMessage(data.errors.map((error: any) => error.message).join(', '));
+        } else {
+          setSubmitMessage('表單提交失敗，請稍後再試。');
+        }
+      }
+    } catch (error) {
+      setSubmitMessage('網路錯誤，請檢查您的連線。');
+    }
   };
 
   if (showAgeGate) {
@@ -88,7 +120,7 @@ const Home: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative h-[70vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
+      <section id="home" className="relative h-[80vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/hero-demo.png)' }}>
         <div className="absolute inset-0 bg-black opacity-70"></div>
         <div className="relative z-10 text-center p-4">
           <h1 className="text-6xl font-extrabold mb-4 leading-tight"><span className="text-emerald-400">EasyLot HUD 1.0</span></h1>
@@ -147,6 +179,23 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Video Tutorial Section */}
+      <section id="tutorial" className="py-20 relative z-10">
+        <div className="container mx-auto text-center px-4">
+          <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">{t.home.videoTutorialTitle}</span></h2>
+          <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border-2 border-emerald-700 shadow-emerald-glow">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ" // YouTube 佔位符
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
       {/* Application Process Section */}
       <section id="pricing" className="py-20 bg-gray-900 relative z-10">
         <div className="container mx-auto text-center px-4">
@@ -190,54 +239,60 @@ const Home: React.FC = () => {
       <section id="contact" className="py-20 relative z-10">
         <div className="container mx-auto text-center max-w-3xl px-4">
           <h2 className="text-5xl font-extrabold mb-16 text-white"><span className="text-emerald-400">聯絡我們</span></h2>
-          <form action="https://formspree.io/f/gotoyo0001@gmail.com" method="POST" className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
+          <form action="https://formspree.io/f/xqeraoyg" method="POST" onSubmit={handleSubmit} className="space-y-8 bg-gray-800 bg-opacity-70 p-10 rounded-xl shadow-xl border border-emerald-700 relative overflow-hidden group">
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-md"></div>
             <div className="relative z-10">
-              <div>
-                <label htmlFor="name" className="block text-left text-gray-300 text-lg font-bold mb-2">
-                  {t.home.formName}
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
-                  placeholder={t.home.formName}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-left text-gray-300 text-lg font-bold mb-2">
-                  {t.home.formEmail}
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
-                  placeholder={t.home.formEmail}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="machine_id" className="block text-left text-gray-300 text-lg font-bold mb-2">
-                  {t.home.formMachineId}
-                </label>
-                <input
-                  type="text"
-                  id="machine_id"
-                  name="machine_id"
-                  className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
-                  placeholder={t.home.formMachineId}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-10 rounded-full text-xl transition duration-300 transform hover:scale-105 mt-6"
-              >
-                {t.home.formSubmit}
-              </button>
+              {formSubmitted ? (
+                <p className="text-emerald-400 text-2xl font-bold">{submitMessage}</p>
+              ) : (
+                <>
+                  <div>
+                    <label htmlFor="name" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                      {t.home.formName}
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                      placeholder={t.home.formName}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                      {t.home.formEmail}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                      placeholder={t.home.formEmail}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="machine_id" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                      {t.home.formMachineId}
+                    </label>
+                    <input
+                      type="text"
+                      id="machine_id"
+                      name="machine_id"
+                      className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
+                      placeholder={t.home.formMachineId}
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-10 rounded-full text-xl transition duration-300 transform hover:scale-105 mt-6"
+                  >
+                    {t.home.formSubmit}
+                  </button>
+                </>
+              )}
             </div>
           </form>
         </div>
@@ -248,7 +303,7 @@ const Home: React.FC = () => {
         <p>&copy; 2023 EasyLot HUD. All rights reserved.</p>
       </footer>
 
-      {/* Tailwind CSS for animations (add to your main CSS file or a style block) */}
+      {/* Tailwind CSS for animations and custom glow */}
       <style jsx>{`
         @keyframes blob {
           0% { transform: translate(0, 0) scale(1); }
@@ -264,6 +319,9 @@ const Home: React.FC = () => {
         }
         .animation-delay-4000 {
           animation-delay: 4s;
+        }
+        .shadow-emerald-glow {
+          box-shadow: 0 0 15px rgba(52, 211, 153, 0.7), 0 0 30px rgba(52, 211, 153, 0.5);
         }
       `}</style>
     </div>

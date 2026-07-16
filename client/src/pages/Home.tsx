@@ -237,7 +237,7 @@ const Home: React.FC = () => {
           <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border-2 border-emerald-700 shadow-emerald-glow mb-12">
             <iframe
               className="absolute top-0 left-0 w-full h-full"
-              src="https://youtu.be/9CABWJs5x-w"
+              src="https://www.youtube.com/embed/9CABWJs5x-w"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

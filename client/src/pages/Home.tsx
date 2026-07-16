@@ -237,7 +237,7 @@ const Home: React.FC = () => {
           <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border-2 border-emerald-700 shadow-emerald-glow mb-12">
             <iframe
               className="absolute top-0 left-0 w-full h-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ" // YouTube 佔位符
+              src="https://www.youtube.com/embed/e3DcY6xPy68"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -393,6 +393,18 @@ const Home: React.FC = () => {
                       className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600"
                       placeholder={t.home.formMachineId}
                       required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="feedback" className="block text-left text-gray-300 text-lg font-bold mb-2">
+                      {t.home.formFeedback}
+                    </label>
+                    <textarea
+                      id="feedback"
+                      name="feedback"
+                      rows={3}
+                      className="shadow-sm appearance-none border rounded w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-700 border-gray-600 resize-y"
+                      placeholder={t.home.formFeedbackPlaceholder}
                     />
                   </div>
                   <button

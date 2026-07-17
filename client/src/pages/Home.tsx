@@ -256,6 +256,7 @@ const Home: React.FC = () => {
                   <li>{t.home.installationStep1}</li>
                   <li>{t.home.installationStep2}</li>
                   <li>{t.home.installationStep3}</li>
+                  <li>{t.home.installationStep4}</li>
                 </ul>
               </div>
             </div>
